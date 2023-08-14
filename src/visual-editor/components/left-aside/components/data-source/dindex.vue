@@ -22,6 +22,7 @@
   import DataModel from './data-model.vue';
   import DataFetch from './data-fetch.vue';
 
+  // @ts-ignore
   defineOptions({
     label: '数据源',
     order: 2,
