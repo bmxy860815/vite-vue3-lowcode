@@ -15,6 +15,7 @@ export enum VisualEditorPropsType {
   modelBind = 'ModelBind',
   /** 可拖拽项 */
   crossSortable = 'CrossSortable',
+  productPicker = 'productPicker',
 }
 
 export type VisualEditorProps = {
@@ -229,5 +230,18 @@ export function createEditorCrossSortableProp({
     showItemPropsConfig,
     labelPosition,
     defaultValue,
+  };
+}
+
+/* --------------------------------------BusinessProductPicker------------------------------------ */
+interface BusinessProductPickerProp {
+  label: string;
+  products: any[];
+}
+export function createBusinessProductPicker({ label, products }: BusinessProductPickerProp) {
+  return {
+    type: VisualEditorPropsType.productPicker,
+    label,
+    products,
   };
 }

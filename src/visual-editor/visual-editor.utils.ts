@@ -229,6 +229,7 @@ export type VisualEditorMarkLines = {
 };
 
 export function createNewBlock(component: VisualEditorComponent): VisualEditorBlockData {
+  console.log('createNewBlock', component, component.showStyleConfig);
   return {
     _vid: `vid_${generateNanoid()}`,
     moduleName: component.moduleName,
@@ -291,6 +292,7 @@ export const VisualDragProvider = (() => {
 export type ComponentModules = {
   baseWidgets: VisualEditorComponent[]; // 基础组件
   containerComponents: VisualEditorComponent[]; // 容器组件
+  businessComponents: VisualEditorComponent[]; // 业务组件
 };
 /**
  * @description 创建编辑器配置
@@ -300,6 +302,7 @@ export function createVisualEditorConfig() {
   const componentModules: ComponentModules = {
     baseWidgets: [],
     containerComponents: [],
+    businessComponents: [],
   };
   // const componentList: VisualEditorComponent[] = []
   const componentMap: Record<string, VisualEditorComponent> = {};

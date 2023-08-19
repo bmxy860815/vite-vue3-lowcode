@@ -100,6 +100,7 @@ export const PropConfig = defineComponent({
             options={[...models.value]}
           ></ElCascader>
         ),
+        [VisualEditorPropsType.productPicker]: () => <div>123</div>,
       }[propConfig.type]();
     };
 

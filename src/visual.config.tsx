@@ -1,6 +1,7 @@
 import { createVisualEditorConfig } from './visual-editor/visual-editor.utils';
 import baseWidgets from '@/packages/base-widgets';
 import containerComponent from '@/packages/container-component';
+import businessComponent from '@/packages/business-component';
 
 export const visualConfig = createVisualEditorConfig();
 // 注册基础控件
@@ -10,6 +11,11 @@ Object.entries(baseWidgets).forEach(([name, widget]) =>
 // 注册容器组件
 Object.entries(containerComponent).forEach(([name, widget]) =>
   visualConfig.registry('containerComponents', name, widget),
+);
+
+// 注册业务组件
+Object.entries(businessComponent).forEach(([name, widget]) =>
+  visualConfig.registry('businessComponents', name, widget),
 );
 
 console.log(
