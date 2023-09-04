@@ -9,6 +9,8 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCarousel: typeof import('element-plus/es')['ElCarousel']
+    ElCarouselItem: typeof import('element-plus/es')['ElCarouselItem']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElCollapse: typeof import('element-plus/es')['ElCollapse']
     ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
@@ -20,6 +22,7 @@ declare module '@vue/runtime-core' {
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElImage: typeof import('element-plus/es')['ElImage']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
     ElPopover: typeof import('element-plus/es')['ElPopover']

@@ -67,8 +67,8 @@ export const products = [
     Price: '0.02',
     Num: 10,
     Covers: [
-      'http://192.168.1.38:8025/uploads/files/2gnjpf67n.jpeg',
-      'http://192.168.1.38:8025/uploads/files/2gnjpfc70.png',
+      'https://img0.baidu.com/it/u=3178136140,1994875353&fm=253&fmt=auto&app=138&f=JPEG?w=513&h=500',
+      'http://t15.baidu.com/it/u=194953581,873288781&fm=224&app=112&f=JPEG?w=500&h=500',
     ],
     CreateTime: '2023-07-31 11:48:54',
   },
@@ -80,7 +80,10 @@ export const products = [
     Name: '\u6d4b\u8bd5\u5546\u54c12',
     Price: '0.02',
     Num: 10,
-    Covers: ['http://192.168.1.38:8025/uploads/files/2gnjpfc70.png'],
+    Covers: [
+      'https://picnew9.photophoto.cn/20150813/tianmaotaobaochanpinshoututupian-08930687_1.jpg',
+      'http://t13.baidu.com/it/u=1614395314,1751381311&fm=224&app=112&f=JPEG?w=500&h=500',
+    ],
     CreateTime: '2023-07-31 11:44:24',
   },
 ];
