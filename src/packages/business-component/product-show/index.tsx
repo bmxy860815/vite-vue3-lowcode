@@ -1,8 +1,13 @@
 import { Button } from 'vant';
 import ProductShow from './ProductShow.vue';
+import style1 from './modal-style_1.jpg';
+import style2 from './modal-style_2.jpg';
+import style3 from './modal-style_3.jpg';
 import type { VisualEditorComponent } from '@/visual-editor/visual-editor.utils';
 import {
-  createEditorInputProp,
+  createEditorModuleTitleProp,
+  // createEditorInputProp,
+  createBusinessStylePicker,
   // createEditorSelectProp,
   // createEditorSwitchProp,
   createBusinessProductPicker,
@@ -19,6 +24,7 @@ export default {
 
     return () => (
       <div style={styles}>
+        {/* <span>{JSON.stringify(props)}</span> */}
         <ProductShow ref={(el) => registerRef(el, block._vid)} {...props}></ProductShow>
       </div>
     );
@@ -32,8 +38,15 @@ export default {
     { label: '开始触摸按钮时触发', value: 'touchstart' },
   ],
   props: {
-    moduleTitle: createEditorInputProp({ label: '模块名称' }),
-    style: createEditorInputProp({ label: '模块样式' }),
+    moduleTitle: createEditorModuleTitleProp({ label: '模块名称', hidden: false, value: '' }),
+    showStyle: createBusinessStylePicker({
+      label: '模块样式',
+      styles: [
+        { label: '样式一', value: '1', pic: style1 },
+        { label: '样式二', value: '2', pic: style2 },
+        { label: '样式三', value: '3', pic: style3 },
+      ],
+    }),
     products: createBusinessProductPicker({ label: '选择商品', products: [] }),
   },
 } as VisualEditorComponent;

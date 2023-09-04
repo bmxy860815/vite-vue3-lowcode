@@ -3,7 +3,7 @@
     moduleTitle: string;
     hideTitle: boolean;
     products: any[];
-    style: any;
+    showStyle: any;
   }
   const props = withDefaults(defineProps<Props>(), {});
 </script>

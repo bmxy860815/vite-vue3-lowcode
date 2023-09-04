@@ -20,9 +20,13 @@ import {
   ElTooltip,
   ElIcon,
   ExpandTrigger,
+  // ElCheckbox,
 } from 'element-plus';
 import { cloneDeep } from 'lodash-es';
 import { Warning } from '@element-plus/icons-vue';
+import { ModuleTitleEditor } from '../module-title-editor/module-title-editor';
+import { ProductPickerEditor } from '../product-picker/product-picker';
+import { StylesPickerEditor } from '../styles-picker/styles-picker';
 import { TablePropEditor, CrossSortableOptionsEditor } from '../../components';
 import { useDotProp } from '@/visual-editor/hooks/useDotProp';
 import { VisualEditorProps, VisualEditorPropsType } from '@/visual-editor/visual-editor.props';
@@ -100,7 +104,23 @@ export const PropConfig = defineComponent({
             options={[...models.value]}
           ></ElCascader>
         ),
-        [VisualEditorPropsType.productPicker]: () => <div>123</div>,
+        [VisualEditorPropsType.productPicker]: () => (
+          <ProductPickerEditor
+            v-model={propObj[prop]}
+            propConfig={propConfig}
+            propObj={propObj}
+          ></ProductPickerEditor>
+        ),
+        [VisualEditorPropsType.stylePicker]: () => (
+          <StylesPickerEditor v-model={propObj[prop]} propConfig={propConfig}></StylesPickerEditor>
+        ),
+        [VisualEditorPropsType.moduleTitle]: () => (
+          <>
+            <ModuleTitleEditor v-model={propObj[prop]}></ModuleTitleEditor>
+            {/* <ElInput v-model={propObj[prop].label}></ElInput>
+            <ElCheckbox v-model={propObj[prop].hidden}>隐藏</ElCheckbox> */}
+          </>
+        ),
       }[propConfig.type]();
     };
 

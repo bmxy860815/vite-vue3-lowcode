@@ -16,6 +16,8 @@ export enum VisualEditorPropsType {
   /** 可拖拽项 */
   crossSortable = 'CrossSortable',
   productPicker = 'productPicker',
+  stylePicker = 'stylePicker',
+  moduleTitle = 'moduleTitle',
 }
 
 export type VisualEditorProps = {
@@ -40,6 +42,8 @@ export type VisualEditorProps = {
   min?: number;
 } & {
   table?: VisualEditorTableOption;
+} & {
+  styles?: imageStyles[];
 };
 
 /*---------------------------------------modelBind-------------------------------------------*/
@@ -243,5 +247,36 @@ export function createBusinessProductPicker({ label, products }: BusinessProduct
     type: VisualEditorPropsType.productPicker,
     label,
     products,
+  };
+}
+
+interface imageStyles {
+  value: string;
+  label?: string;
+  pic?: string;
+}
+interface BusinessStylePickerProp {
+  label: string;
+  styles: imageStyles[];
+}
+export function createBusinessStylePicker({ label, styles }: BusinessStylePickerProp) {
+  return {
+    type: VisualEditorPropsType.stylePicker,
+    label,
+    styles,
+  };
+}
+
+interface ModuleTitle {
+  label: string;
+  value: string;
+  hidden: boolean;
+}
+export function createEditorModuleTitleProp({ label, hidden, value }: ModuleTitle) {
+  return {
+    type: VisualEditorPropsType.moduleTitle,
+    label,
+    value,
+    hidden,
   };
 }
