@@ -18,6 +18,7 @@ export enum VisualEditorPropsType {
   productPicker = 'productPicker',
   stylePicker = 'stylePicker',
   moduleTitle = 'moduleTitle',
+  propsTable = 'propsTable',
 }
 
 export type VisualEditorProps = {
@@ -44,6 +45,8 @@ export type VisualEditorProps = {
   table?: VisualEditorTableOption;
 } & {
   styles?: imageStyles[];
+} & {
+  cols?: any[];
 };
 
 /*---------------------------------------modelBind-------------------------------------------*/
@@ -278,5 +281,18 @@ export function createEditorModuleTitleProp({ label, hidden, value }: ModuleTitl
     label,
     value,
     hidden,
+  };
+}
+
+interface PropsTable {
+  cols: any[];
+}
+
+export function createPropsTableEditor({ cols }: PropsTable) {
+  console.log('123');
+  return {
+    type: VisualEditorPropsType.propsTable,
+    label: '',
+    cols,
   };
 }

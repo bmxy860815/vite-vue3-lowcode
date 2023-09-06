@@ -27,6 +27,7 @@ import { Warning } from '@element-plus/icons-vue';
 import { ModuleTitleEditor } from '../module-title-editor/module-title-editor';
 import { ProductPickerEditor } from '../product-picker/product-picker';
 import { StylesPickerEditor } from '../styles-picker/styles-picker';
+import { PropsTableEditor } from '../props-table-editor/props-table-editor';
 import { TablePropEditor, CrossSortableOptionsEditor } from '../../components';
 import { useDotProp } from '@/visual-editor/hooks/useDotProp';
 import { VisualEditorProps, VisualEditorPropsType } from '@/visual-editor/visual-editor.props';
@@ -120,6 +121,11 @@ export const PropConfig = defineComponent({
             {/* <ElInput v-model={propObj[prop].label}></ElInput>
             <ElCheckbox v-model={propObj[prop].hidden}>隐藏</ElCheckbox> */}
           </>
+        ),
+        [VisualEditorPropsType.propsTable]: () => (
+          <PropsTableEditor v-model={propObj[prop]} propConfig={propConfig} propObj={propObj}>
+            123
+          </PropsTableEditor>
         ),
       }[propConfig.type]();
     };

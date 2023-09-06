@@ -1,0 +1,47 @@
+.props-table {
+  width: 100%;
+  // background-color: rgba(255, 100, 100, 0.8);
+  .props-table__line {
+    display: grid;
+    grid-template-columns: 60px repeat(3, minmax(0, 1fr)) 100px;
+    align-items: center;
+    justify-items: center;
+    border: 1px solid #ccc;
+    gap: 1px;
+    text-align: center;
+
+    &.header {
+      background: rgba(0, 0, 0, 0.3);
+    }
+    & + .props-table__line {
+      margin-top: 10px;
+    }
+  }
+  .header-item {
+    // background-color: #ccc;
+  }
+}
+
+.operators {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  padding: 0 10px;
+}
+.op-icon {
+  cursor: pointer;
+}
+.op-icon:hover {
+  color: var(--van-blue, red);
+}
+.op-icon.del-icon:hover {
+  color: #faa;
+}
+.el-icon {
+  cursor: pointer;
+}
+.el-icon:not(:last-child) {
+  color: blue !important;
+}

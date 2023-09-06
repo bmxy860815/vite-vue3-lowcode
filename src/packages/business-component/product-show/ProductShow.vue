@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { ShoppingCart } from '@element-plus/icons-vue';
+  import { ShoppingCart, GoodsFilled } from '@element-plus/icons-vue';
   interface Props {
     moduleTitle: { value: string; hidden: boolean };
     hideTitle: boolean;
@@ -12,29 +12,13 @@
 <template>
   <div class="product-show">
     <div v-if="!props.moduleTitle.hidden" class="module-title">{{ props.moduleTitle.value }}</div>
-    <template v-if="props.showStyle === '1'">
-      <div class="product-grid style-1">
-        <div v-for="good of props.products" :key="good.ID" class="product-item">
-          <div class="product-image">
-            <ElImage :src="good.Covers[0]" class="product-image__img"></ElImage>
-          </div>
-          <div class="product-name">{{ good.Name }}</div>
-          <div class="product-footer">
-            <span class="product-price">{{ good.Price }}</span>
-            <span class="shopping-cart-btn">
-              <el-icon><ShoppingCart /></el-icon>
-            </span>
-          </div>
-        </div>
-      </div>
-    </template>
-    <template v-else-if="props.showStyle === '2'">
-      <div class="product-grid style-2">
-        <div v-for="good of props.products" :key="good.ID" class="product-item">
-          <div class="product-image">
-            <ElImage :src="good.Covers[0]" class="product-image__img"></ElImage>
-          </div>
-          <div class="product-info">
+    <template v-if="props.products && props.products.length">
+      <template v-if="props.showStyle === '1'">
+        <div class="product-grid style-1">
+          <div v-for="good of props.products" :key="good.ID" class="product-item">
+            <div class="product-image">
+              <ElImage :src="good.Covers[0]" class="product-image__img"></ElImage>
+            </div>
             <div class="product-name">{{ good.Name }}</div>
             <div class="product-footer">
               <span class="product-price">{{ good.Price }}</span>
@@ -44,53 +28,86 @@
             </div>
           </div>
         </div>
-      </div>
-    </template>
-    <template v-else-if="props.showStyle === '3'">
-      <ElCarousel height="280px">
-        <template v-for="(good, index) in props.products">
-          <ElCarouselItem v-if="index % 2 === 0" :key="index">
-            <div class="product-grid style-1">
-              <div class="product-item">
-                <div class="product-image">
-                  <ElImage :src="good.Covers[0]" class="product-image__img"></ElImage>
-                </div>
-                <div class="product-info">
-                  <div class="product-name">{{ good.Name }}</div>
-                  <div class="product-footer">
-                    <span class="product-price">{{ good.Price }}</span>
-                    <span class="shopping-cart-btn">
-                      <el-icon><ShoppingCart /></el-icon>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div v-if="index + 1 < props.products.length" class="product-item">
-                <div class="product-image">
-                  <ElImage
-                    :src="props.products[index + 1].Covers[0]"
-                    class="product-image__img"
-                  ></ElImage>
-                </div>
-                <div class="product-info">
-                  <div class="product-name">{{ props.products[index + 1].Name }}</div>
-                  <div class="product-footer">
-                    <span class="product-price">{{ props.products[index + 1].Price }}</span>
-                    <span class="shopping-cart-btn">
-                      <el-icon><ShoppingCart /></el-icon>
-                    </span>
-                  </div>
-                </div>
+      </template>
+      <template v-else-if="props.showStyle === '2'">
+        <div class="product-grid style-2">
+          <div v-for="good of props.products" :key="good.ID" class="product-item">
+            <div class="product-image">
+              <ElImage :src="good.Covers[0]" class="product-image__img"></ElImage>
+            </div>
+            <div class="product-info">
+              <div class="product-name">{{ good.Name }}</div>
+              <div class="product-footer">
+                <span class="product-price">{{ good.Price }}</span>
+                <span class="shopping-cart-btn">
+                  <el-icon><ShoppingCart /></el-icon>
+                </span>
               </div>
             </div>
-          </ElCarouselItem>
-        </template>
-      </ElCarousel>
+          </div>
+        </div>
+      </template>
+      <template v-else-if="props.showStyle === '3'">
+        <ElCarousel height="280px">
+          <template v-for="(good, index) in props.products">
+            <ElCarouselItem v-if="index % 2 === 0" :key="index">
+              <div class="product-grid style-1">
+                <div class="product-item">
+                  <div class="product-image">
+                    <ElImage :src="good.Covers[0]" class="product-image__img"></ElImage>
+                  </div>
+                  <div class="product-info">
+                    <div class="product-name">{{ good.Name }}</div>
+                    <div class="product-footer">
+                      <span class="product-price">{{ good.Price }}</span>
+                      <span class="shopping-cart-btn">
+                        <el-icon><ShoppingCart /></el-icon>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="index + 1 < props.products.length" class="product-item">
+                  <div class="product-image">
+                    <ElImage
+                      :src="props.products[index + 1].Covers[0]"
+                      class="product-image__img"
+                    ></ElImage>
+                  </div>
+                  <div class="product-info">
+                    <div class="product-name">{{ props.products[index + 1].Name }}</div>
+                    <div class="product-footer">
+                      <span class="product-price">{{ props.products[index + 1].Price }}</span>
+                      <span class="shopping-cart-btn">
+                        <el-icon><ShoppingCart /></el-icon>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ElCarouselItem>
+          </template>
+        </ElCarousel>
+      </template>
+    </template>
+    <template v-else>
+      <div class="empty">
+        <el-icon size="56px" color="#1989fa"><GoodsFilled /></el-icon>
+        <div class="hint">请在右侧编辑产品展示组件内容</div>
+      </div>
     </template>
   </div>
 </template>
 
 <style lang="postcss" scoped>
+  .empty {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .empty .hint {
+    color: #999;
+  }
   .product-show {
     width: 100%;
   }
