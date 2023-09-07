@@ -14,13 +14,14 @@ import {
   // Cellphone,
   // RefreshLeft,
   // RefreshRight,
-  Position,
+  // Position,
   // Delete,
   // ChatLineSquare,
   Download,
   Upload,
 } from '@element-plus/icons-vue';
-import { useVisualData, localKey } from '@/visual-editor/hooks/useVisualData';
+// localKey
+import { useVisualData } from '@/visual-editor/hooks/useVisualData';
 import { useModal } from '@/visual-editor/hooks/useModal';
 import MonacoEditor from '@/visual-editor/components/common/monaco-editor/MonacoEditor';
 import 'element-plus/es/components/message/style/css';
@@ -84,6 +85,7 @@ export const useTools = () => {
       title: '导出JSON',
       icon: Download,
       onClick: () => {
+        // console.log(JSON.stringify(jsonData));
         const { copy } = useClipboard({ source: JSON.stringify(jsonData) });
 
         copy()
@@ -158,14 +160,14 @@ export const useTools = () => {
     //     });
     //   },
     // },
-    {
-      title: '预览',
-      icon: Position,
-      onClick: () => {
-        localStorage.setItem(localKey, JSON.stringify(jsonData));
-        window.open(location.href.replace('/#/', '/preview/#/'));
-      },
-    },
+    // {
+    //   title: '预览',
+    //   icon: Position,
+    //   onClick: () => {
+    //     localStorage.setItem(localKey, JSON.stringify(jsonData));
+    //     window.open(location.href.replace('/#/', '/preview/#/'));
+    //   },
+    // },
     // {
     //   title: '反馈',
     //   icon: ChatLineSquare,

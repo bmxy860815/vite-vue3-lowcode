@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-  import { ElForm, ElFormItem, ElColorPicker } from 'element-plus';
-  import { ImageChoose } from '@/visual-editor/components/common/image-choose/image-choose.tsx';
+  import { ElForm, ElFormItem, ElColorPicker, ElDialog, ElRadioGroup } from 'element-plus';
+  import { ImageChoose } from '@/visual-editor/components/common/image-choose/image-choose';
+  import { Pointer } from '@element-plus/icons-vue';
+  import { useVisualData } from '@/visual-editor/hooks/useVisualData';
   interface Props {
     modelValue: any;
   }
@@ -16,6 +18,7 @@
     form.value
       .validate()
       .then((res) => {
+        console.log('validate success...');
         emits('update:modelValue', { ...props.modelValue, ...model.value });
         emits('saved');
       })
@@ -23,10 +26,70 @@
         console.log('valid error:', err);
       });
   }
+  const validateLink = (rule: any, value: any, callback: any) => {
+    console.log('validateLink');
+    if (model.value.link === 'none') {
+      callback();
+      return;
+    }
+
+    if (!linkTo.value) {
+      callback(new Error(`请选择需要跳转的${model.value.link === 'page' ? '页面' : '文章'}`));
+      return;
+    }
+    callback();
+  };
   const rules = {
     title: [{ required: true, message: '请输入标题名称' }],
     icon: [{ required: true, message: '请上传/选择图标' }],
-    link: [{ required: true, message: '请选择链接' }],
+    link: [
+      { required: true, message: '请选择链接' },
+      {
+        validator: validateLink,
+        trigger: 'blur',
+      },
+    ],
+  };
+
+  const linkTo = ref('');
+
+  const selectedLink = computed(() => {
+    console.log('selected:', 1);
+    if (!linkTo.value) {
+      return null;
+    }
+    console.log('selected:', 2, model.value.link);
+    if (model.value.link === 'page') {
+      console.log('selected:', 3);
+      const t = pages.value.find((rec) => rec.path === linkTo.value);
+      console.log('selected:', 4, t);
+      if (!t) {
+        return null;
+      }
+      return t;
+    } else {
+      console.log('123');
+      return null;
+    }
+  });
+  const { jsonData, setCurrentPage, deletePage, updatePage, incrementPage } = useVisualData();
+  // 所有的页面
+  const pages = computed(() =>
+    Object.keys(jsonData.pages).map((key) => ({
+      title: jsonData.pages[key].title,
+      path: key,
+    })),
+  );
+
+  const visibleChoosePagePop = ref(false);
+  const handleChoosePage = () => {
+    console.log('handleChoosePage');
+    visibleChoosePagePop.value = true;
+  };
+  const confirmChoosePage = () => {
+    console.log('linkTo', linkTo.value);
+    model.linkTo = linkTo.value;
+    visibleChoosePagePop.value = false;
   };
 </script>
 
@@ -57,6 +120,37 @@
             <ElRadio label="article">文章</ElRadio>
             <ElRadio label="none">无</ElRadio>
           </ElRadioGroup>
+          <div class="picker-link-to">
+            <template v-if="model.link === 'page'">
+              <div class="choose-line flex items-center">
+                <ElButton size="default" :icon="Pointer" @click="handleChoosePage"
+                  >选择页面</ElButton
+                >
+                <span class="ml-4 text-base text-gray-400" v-if="selectedLink"
+                  >已选择页面：[{{ selectedLink?.title }}]</span
+                >
+              </div>
+              <ElDialog
+                width="500px"
+                append-to-body
+                v-model="visibleChoosePagePop"
+                title="选择页面"
+              >
+                <div class="pages-container">
+                  <ElRadioGroup size="large" v-model="linkTo">
+                    <ElRadio v-for="item of pages" :label="item.path">{{ item.title }}</ElRadio>
+                  </ElRadioGroup>
+                </div>
+                <div class="footer flex justify-end">
+                  <ElButton size="default">取消</ElButton>
+                  <ElButton type="primary" size="default" @click="confirmChoosePage">确认</ElButton>
+                </div>
+              </ElDialog>
+            </template>
+            <template v-else-if="model.link === 'article'">
+              <ElButton :icon="Pointer" size="default">选择文章</ElButton>
+            </template>
+          </div>
         </div>
       </ElFormItem>
       <ElFormItem class="save-line pt-5">

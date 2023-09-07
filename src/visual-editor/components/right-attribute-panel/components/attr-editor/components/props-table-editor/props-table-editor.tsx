@@ -49,13 +49,6 @@ export const PropsTableEditor = defineComponent({
     console.log('empty', empty);
     const navArr = ref([{ ...empty }, { ...empty }, { ...empty }, { ...empty }]);
 
-    // const onClick = (rec) => {
-    //   console.log('123', rec.value);
-    //   model.value = rec.value;
-    // };
-
-    /* 'edit', 'up', 'down', 'del' */
-    // const onEdit = () => {};
     const operators = [
       {
         key: 'edit',
@@ -124,7 +117,7 @@ export const PropsTableEditor = defineComponent({
           article: '文章',
           none: '无',
         };
-        return <span>{mapping[col.value]}</span>;
+        return <span>{mapping[rec[col.value]]}</span>;
       } else {
         return <span>{rec[col.value]}</span>;
       }

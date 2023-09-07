@@ -25,7 +25,7 @@
     <!--    中间操作页面部分 end-->
     <!--    右侧工具栏 start-->
     <el-col :span="6" class="right-tools flex flex-row-reverse items-center">
-      <el-tooltip class="item" effect="dark" content="运行" placement="bottom">
+      <el-tooltip class="item" effect="dark" content="预览" placement="bottom">
         <el-button
           type="primary"
           :icon="VideoPlay"
