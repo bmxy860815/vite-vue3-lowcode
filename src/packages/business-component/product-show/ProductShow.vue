@@ -2,16 +2,25 @@
   import { ShoppingCart, GoodsFilled } from '@element-plus/icons-vue';
   interface Props {
     moduleTitle: { value: string; hidden: boolean };
-    hideTitle: boolean;
     products: any[];
     showStyle: any;
   }
-  const props = withDefaults(defineProps<Props>(), {});
+  const props = withDefaults(defineProps<Props>(), {
+    moduleTitle() {
+      return { value: '', hidden: false };
+    },
+    products() {
+      return [];
+    },
+    showStyle: '1',
+  });
 </script>
 
 <template>
   <div class="product-show">
-    <div v-if="!props.moduleTitle.hidden" class="module-title">{{ props.moduleTitle.value }}</div>
+    <div v-if="props.moduleTitle.value && !props.moduleTitle.hidden" class="module-title">{{
+      props.moduleTitle.value
+    }}</div>
     <template v-if="props.products && props.products.length">
       <template v-if="props.showStyle === '1'">
         <div class="product-grid style-1">

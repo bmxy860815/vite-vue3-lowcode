@@ -16,13 +16,14 @@ import { VisualEditorProps } from '@/visual-editor/visual-editor.props';
 
 export const PropsTableEditor = defineComponent({
   props: {
-    modelValue: { type: String as PropType<string> },
+    modelValue: { type: Array as PropType<any[]> },
     propConfig: { type: Object as PropType<VisualEditorProps>, required: true },
     propObj: { type: Object as PropType<any> },
   },
   emits: ['update:modelValue'],
   setup(props, { emit }: SetupContext) {
     const model = useVModel(props, 'modelValue', emit);
+
     console.log('emit', emit, model);
 
     console.log('PropsTableEditor', props, props.propObj);
@@ -38,17 +39,20 @@ export const PropsTableEditor = defineComponent({
         } else if (newVal === '3') {
           navArr.value = t.slice(0, 6);
         }
+        console.log('watch showStyle change:::', navArr);
+        model.value = JSON.parse(JSON.stringify(navArr.value));
       },
     );
 
     // 根据传入的cols参数生成属性对象
     const empty = props.propConfig.cols
-      ? Object.fromEntries(props.propConfig.cols.map((rec) => [rec.value, '']))
+      ? { ...Object.fromEntries(props.propConfig.cols.map((rec) => [rec.value, ''])), linkTo: '' }
       : {};
 
     console.log('empty', empty);
     const navArr = ref([{ ...empty }, { ...empty }, { ...empty }, { ...empty }]);
 
+    // 操作列
     const operators = [
       {
         key: 'edit',
@@ -99,6 +103,9 @@ export const PropsTableEditor = defineComponent({
     const updateModelValue = (event, index) => {
       console.log(event, index);
       navArr.value[index] = event;
+      const newModel = JSON.parse(JSON.stringify([...navArr.value]));
+      console.log('newModel', newModel);
+      model.value = [...newModel];
     };
 
     const propsFormSave = (index) => {
@@ -126,23 +133,27 @@ export const PropsTableEditor = defineComponent({
       <div class={styles.propsTable}>
         <div class={[styles.propsTableLine, styles.header]}>
           {props.propConfig?.cols &&
-            props.propConfig.cols.map((col) => <div class={[styles.headerItem]}>{col.label}</div>)}
+            props.propConfig.cols
+              .filter((col) => col.value !== 'linkTo')
+              .map((col) => <div class={[styles.headerItem]}>{col.label}</div>)}
         </div>
         {navArr.value.map((rec: any, index: number) => (
           <>
             <div class={styles.propsTableLine}>
               {props.propConfig?.cols &&
-                props.propConfig.cols.map((col) => {
-                  if (col.value === 'op') {
-                    return (
-                      <div class={styles.operators}>
-                        {operators.filter((t) => col.ops.includes(t.key)).map((t) => t.tsx(rec))}
-                      </div>
-                    );
-                  } else {
-                    return <div class={styles.propsCol}>{colDisplay(col, rec)}</div>;
-                  }
-                })}
+                props.propConfig.cols
+                  .filter((col) => !col.hidden)
+                  .map((col) => {
+                    if (col.value === 'op') {
+                      return (
+                        <div class={styles.operators}>
+                          {operators.filter((t) => col.ops.includes(t.key)).map((t) => t.tsx(rec))}
+                        </div>
+                      );
+                    } else {
+                      return <div class={styles.propsCol}>{colDisplay(col, rec)}</div>;
+                    }
+                  })}
             </div>
             {rec.isEdit && (
               <PropForm

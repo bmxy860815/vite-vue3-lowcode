@@ -7,18 +7,19 @@
  * @FilePath: /vite-vue3-lowcode/src/packages/business-component/category-nav/index.tsx
  */
 import { Button } from 'vant';
-import CategoryNav from './CategoryNav.vue';
+// import CategoryNav from './CategoryNav.vue';
+import { ElImage } from 'element-plus';
 import style1 from './nav_1.jpg';
 import style2 from './nav_2.jpg';
 import style3 from './nav_3.jpg';
 import type { VisualEditorComponent } from '@/visual-editor/visual-editor.utils';
 import {
-  // createEditorModuleTitleProp,
-  // createEditorInputProp,
   createPropsTableEditor,
   createBusinessStylePicker,
 } from '@/visual-editor/visual-editor.props';
 import { useGlobalProperties } from '@/hooks/useGlobalProperties';
+
+import './index.scss';
 
 export default {
   key: 'categoryNav',
@@ -28,9 +29,32 @@ export default {
   preview: () => <Button type={'primary'}>分类导航</Button>,
   render: ({ props, block, styles }) => {
     const { registerRef } = useGlobalProperties();
+    console.log('blk', block, registerRef, props);
+    watch(
+      () => props,
+      (nv) => {
+        console.log('categoryNav::props changed.', nv);
+      },
+      { deep: true },
+    );
     return () => (
       <div style={styles}>
-        <CategoryNav ref={(el) => registerRef(el, block._vid)} {...props}></CategoryNav>
+        {props.showStyle && props.navs ? (
+          <div class={['navs-layout-container', `style-${props.showStyle}`]}>
+            {props.navs &&
+              props.navs.map((rec) => {
+                return (
+                  <div class="item" style={{ backgroundColor: rec.bgColor }}>
+                    <ElImage class="item-img" src={rec.icon}></ElImage>
+                    <h2>{rec.title}</h2>
+                  </div>
+                );
+              })}
+          </div>
+        ) : (
+          <div>EMPTY</div>
+        )}
+        {/* <CategoryNav ref={(el) => registerRef(el, block._vid)} {...props}></CategoryNav> */}
       </div>
     );
   },
@@ -53,6 +77,7 @@ export default {
         { label: '图标', value: 'icon' },
         { label: '标题', value: 'title' },
         { label: '链接', value: 'link' },
+        { label: '链接地址', value: 'linkTo', hidden: true },
         { label: '背景色', value: 'bgColor' },
         { label: '操作', value: 'op', ops: ['edit', 'up', 'down'] },
       ],

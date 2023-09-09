@@ -21,7 +21,13 @@ export default {
   preview: () => <Button type={'primary'}>产品展示</Button>,
   render: ({ props, block, styles }) => {
     const { registerRef } = useGlobalProperties();
-
+    watch(
+      () => props,
+      () => {
+        console.log('productShow::props change.');
+      },
+      { deep: true },
+    );
     return () => (
       <div style={styles}>
         {/* <span>{JSON.stringify(props)}</span> */}

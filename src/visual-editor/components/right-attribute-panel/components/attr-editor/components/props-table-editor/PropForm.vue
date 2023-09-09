@@ -19,7 +19,11 @@
       .validate()
       .then((res) => {
         console.log('validate success...');
-        emits('update:modelValue', { ...props.modelValue, ...model.value });
+        const data = JSON.parse(
+          JSON.stringify({ ...props.modelValue, ...model.value, linkTo: linkTo.value }),
+        );
+        console.log('data', data);
+        emits('update:modelValue', data);
         emits('saved');
       })
       .catch((err) => {
@@ -50,8 +54,8 @@
       },
     ],
   };
-
-  const linkTo = ref('');
+  console.log('123', model.value);
+  const linkTo = ref(model.value.linkTo);
 
   const selectedLink = computed(() => {
     console.log('selected:', 1);
