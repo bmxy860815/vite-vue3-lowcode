@@ -88,8 +88,8 @@
         background-image: url(${bgImage});
       }`;
     const styleSheets = document.styleSheets[0];
-    const firstCssRule = document.styleSheets[0].cssRules[0];
-    const isExistContent = firstCssRule.cssText.includes('.simulator-editor-content');
+    const firstCssRule = styleSheets ? styleSheets.cssRules[0] : null;
+    const isExistContent = firstCssRule ? firstCssRule.cssText.includes('.simulator-editor-content') : false;
     if (isExistContent) {
       styleSheets.deleteRule(0);
     }

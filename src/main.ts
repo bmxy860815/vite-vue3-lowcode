@@ -6,7 +6,7 @@ import { setupVant } from './plugins/vant';
 
 import 'normalize.css';
 import 'virtual:windi.css';
-import 'virtual:windi-devtools';
+// import 'virtual:windi-devtools';
 import 'animate.css';
 
 import router from './router/';

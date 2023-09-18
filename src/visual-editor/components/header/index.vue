@@ -3,7 +3,7 @@
     <!--    左侧logo start-->
     <el-col :span="6" class="flex items-center">
       <div class="logo"></div>
-      <h3 class="font-semibold">H5低代码</h3>
+      <h3 class="text-2xl ml-2 font-semibold">商城制作</h3>
     </el-col>
     <!--    左侧logo end-->
     <!--    中间操作页面部分 start-->
@@ -25,6 +25,10 @@
     <!--    中间操作页面部分 end-->
     <!--    右侧工具栏 start-->
     <el-col :span="6" class="right-tools flex flex-row-reverse items-center">
+
+<!--      v-if="isInFrame"-->
+      <el-button round class="header-text-btn" type="default" @click="goBack" size="large">返回</el-button>
+      <el-button round class="header-text-btn" type="success" @click="save" size="large">保存</el-button>
       <el-tooltip class="item" effect="dark" content="预览" placement="bottom">
         <el-button
           type="primary"
@@ -71,7 +75,7 @@
   import { VideoPlay } from '@element-plus/icons-vue';
   import Preview from './preview.vue';
   import { useTools } from './useTools';
-  import { useVisualData, localKey } from '@/visual-editor/hooks/useVisualData';
+  import { useVisualData, localKey, initVisualData } from '@/visual-editor/hooks/useVisualData';
   // import { BASE_URL } from '@/visual-editor/utils';
 
   // @ts-ignore
@@ -83,18 +87,67 @@
 
   const tools = useTools();
 
-  const { jsonData } = useVisualData();
+  const { jsonData, overrideProject } = useVisualData();
 
   const runPreview = () => {
     sessionStorage.setItem(localKey, JSON.stringify(jsonData));
     localStorage.setItem(localKey, JSON.stringify(jsonData));
     isShowH5Preview.value = true;
   };
+  const isInFrame = computed(() => {
+    return window.parent !== window
+  })
+
+  const isSubApp = computed(() => {
+    return Boolean(window.microApp);
+  })
+
+  const messageHandler = (event) => {
+    console.log('messageHandler', event)
+    if(event.source === parent) {
+      if(event.data && event.data.action === 'init') {
+        if(event.data.data) {
+          // overrideProject(event.data.data as string)
+          const jData = JSON.parse(event.data.data)
+          console.log('overrideProject', jData)
+
+          overrideProject(jData);
+        }
+      }
+    }
+  }
+
+  const init = () => {
+    parent.postMessage({action: 'loadData'}, "*");
+  }
+
+  onMounted(() => {
+    window.addEventListener('message', messageHandler)
+    init()
+  })
+  const goBack = () => {
+    console.log('goBack')
+    if(isInFrame.value) {
+      parent.postMessage({action: 'goback', data: JSON.stringify(jsonData)}, '*')
+    } else if(isSubApp.value) {
+      const baseRouter = window.microApp.router.getBaseAppRouter()
+      baseRouter.go(-1)
+    } else {
+      console.log('no need go back.')
+    }
+  }
+
+  const save = () => {
+    parent.postMessage({action: 'save', data: JSON.stringify(jsonData)}, '*')
+  }
 </script>
 
 <style lang="scss" scoped>
   .header {
     width: 100%;
+  .header-text-btn {
+    font-size: 18px!important;
+  }
 
     .logo {
       width: 60px;
