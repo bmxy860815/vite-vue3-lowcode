@@ -1,7 +1,7 @@
 import { defineComponent, PropType, SetupContext } from 'vue';
 import { useVModel } from '@vueuse/core';
 import { ElButton, ElDialog, ElImage, ElTable, ElTableColumn } from 'element-plus';
-import { groups, products } from './mock-data';
+import axios from 'axios';
 import { VisualEditorProps } from '@/visual-editor/visual-editor.props';
 import './product-picker.css';
 
@@ -15,10 +15,39 @@ export const ProductPickerEditor = defineComponent({
   setup(props, { emit }: SetupContext) {
     const model = useVModel(props, 'modelValue', emit);
     const visible = ref(false);
-    console.log('model', model);
-    console.log('products', products);
+    const products = ref<any[]>([]);
+    const ClassID = sessionStorage.getItem('ClassID');
+    const PID = sessionStorage.getItem('PID');
+    const token = sessionStorage.getItem('token');
 
-    const productGroup = ref(groups);
+    const getGoodPromise = axios.request({
+      url: `/api/classes/${ClassID}/wechat/good?PID=${PID}`,
+      baseURL: import.meta.env.VITE_API_URL || 'http://192.168.1.38:8000',
+      method: 'get',
+      timeout: 10 * 1000, // 请求超时时间
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const getGoodGroupPromise = axios.request({
+      url: `/api/classes/${ClassID}/wechat/good-group?PID=${PID}`,
+      baseURL: import.meta.env.VITE_API_URL || 'http://192.168.1.38:8000',
+      method: 'get',
+      timeout: 10 * 1000, // 请求超时时间
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    Promise.all([getGoodGroupPromise, getGoodPromise]).then(([grp, pdt]) => {
+      productGroup.value = grp.data;
+      products.value = pdt.data.data;
+    });
+
+    const productGroup = ref([]);
     const onClick = async () => {
       console.log('onClick', props.propObj.style);
       visible.value = true;
@@ -111,7 +140,7 @@ export const ProductPickerEditor = defineComponent({
                     >
                       未分组
                     </div>
-                    {productGroup.value.map((grp) => {
+                    {productGroup.value.map((grp: any) => {
                       return (
                         <div
                           class={[
@@ -129,7 +158,7 @@ export const ProductPickerEditor = defineComponent({
                   <ElTable
                     ref={multipleTableRef}
                     class="w-full"
-                    data={products}
+                    data={products.value}
                     onSelectionChange={selectionChange}
                   >
                     <ElTableColumn type="selection" width="55" />

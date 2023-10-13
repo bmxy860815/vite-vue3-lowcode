@@ -8,10 +8,12 @@
 
 <script setup lang="ts">
   import { provide } from 'vue';
+  import { useRoute } from 'vue-router';
   import zhCn from 'element-plus/lib/locale/lang/zh-cn';
   import { initVisualData, injectKey, localKey } from '@/visual-editor/hooks/useVisualData';
 
   const visualData = initVisualData();
+  console.log('112', visualData);
   // 注入可视化编辑器所有配置
   provide(injectKey, visualData);
 

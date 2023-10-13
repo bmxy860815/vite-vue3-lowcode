@@ -25,10 +25,13 @@
     <!--    中间操作页面部分 end-->
     <!--    右侧工具栏 start-->
     <el-col :span="6" class="right-tools flex flex-row-reverse items-center">
-
-<!--      v-if="isInFrame"-->
-      <el-button round class="header-text-btn" type="default" @click="goBack" size="large">返回</el-button>
-      <el-button round class="header-text-btn" type="success" @click="save" size="large">保存</el-button>
+      <!--      v-if="isInFrame"-->
+      <el-button round class="header-text-btn" type="default" @click="goBack" size="large"
+        >返回</el-button
+      >
+      <el-button round class="header-text-btn" type="success" @click="save" size="large"
+        >保存</el-button
+      >
       <el-tooltip class="item" effect="dark" content="预览" placement="bottom">
         <el-button
           type="primary"
@@ -72,10 +75,14 @@
 </template>
 
 <script lang="ts" setup>
+  import axios from 'axios';
+  import { useRoute } from 'vue-router';
   import { VideoPlay } from '@element-plus/icons-vue';
   import Preview from './preview.vue';
   import { useTools } from './useTools';
   import { useVisualData, localKey, initVisualData } from '@/visual-editor/hooks/useVisualData';
+  import { ElMessage } from 'element-plus/es';
+
   // import { BASE_URL } from '@/visual-editor/utils';
 
   // @ts-ignore
@@ -83,6 +90,7 @@
     name: 'PageHeader',
   });
 
+  const route = useRoute();
   const isShowH5Preview = ref(false);
 
   const tools = useTools();
@@ -95,59 +103,90 @@
     isShowH5Preview.value = true;
   };
   const isInFrame = computed(() => {
-    return window.parent !== window
-  })
+    return window.parent !== window;
+  });
 
   const isSubApp = computed(() => {
     return Boolean(window.microApp);
-  })
+  });
 
   const messageHandler = (event) => {
-    console.log('messageHandler', event)
-    if(event.source === parent) {
-      if(event.data && event.data.action === 'init') {
-        if(event.data.data) {
+    console.log('messageHandler', event);
+    if (event.source === parent) {
+      if (event.data && event.data.action === 'init') {
+        if (event.data.data) {
           // overrideProject(event.data.data as string)
-          const jData = JSON.parse(event.data.data)
-          console.log('overrideProject', jData)
+          const jData = JSON.parse(event.data.data);
+          console.log('overrideProject', jData);
 
           overrideProject(jData);
         }
       }
     }
-  }
+  };
 
   const init = () => {
-    parent.postMessage({action: 'loadData'}, "*");
-  }
+    parent.postMessage({ action: 'loadData' }, '*');
+  };
 
   onMounted(() => {
-    window.addEventListener('message', messageHandler)
-    init()
-  })
+    window.addEventListener('message', messageHandler);
+    init();
+  });
   const goBack = () => {
-    console.log('goBack')
-    if(isInFrame.value) {
-      parent.postMessage({action: 'goback', data: JSON.stringify(jsonData)}, '*')
-    } else if(isSubApp.value) {
-      const baseRouter = window.microApp.router.getBaseAppRouter()
-      baseRouter.go(-1)
+    console.log('goBack');
+    if (isInFrame.value) {
+      parent.postMessage({ action: 'goback', data: JSON.stringify(jsonData) }, '*');
+    } else if (isSubApp.value) {
+      const baseRouter = window.microApp.router.getBaseAppRouter();
+      baseRouter.go(-1);
     } else {
-      console.log('no need go back.')
+      console.log('no need go back.');
     }
-  }
+  };
 
   const save = () => {
-    parent.postMessage({action: 'save', data: JSON.stringify(jsonData)}, '*')
-  }
+    const ClassID = sessionStorage.getItem('ClassID');
+    const PID = sessionStorage.getItem('PID');
+    const MiniProgram = sessionStorage.getItem('MiniProgram');
+    const token = sessionStorage.getItem('token');
+
+    axios
+      .request({
+        url: `/api/classes/${ClassID}/wechat/shop?PID=${PID}`,
+        baseURL: import.meta.env.VITE_API_URL || 'http://192.168.1.38:8000',
+        data: {
+          Content: JSON.stringify(jsonData),
+          MiniProgram,
+        },
+        method: 'post',
+        timeout: 10 * 1000, // 请求超时时间
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(123, res);
+        ElMessage({
+          showClose: true,
+          type: 'success',
+          duration: 2000,
+          message: '保存成功',
+        });
+      });
+
+    // parent.postMessage({action: 'save', data: JSON.stringify(jsonData)}, '*')
+  };
 </script>
 
 <style lang="scss" scoped>
   .header {
     width: 100%;
-  .header-text-btn {
-    font-size: 18px!important;
-  }
+
+    .header-text-btn {
+      font-size: 18px !important;
+    }
 
     .logo {
       width: 60px;

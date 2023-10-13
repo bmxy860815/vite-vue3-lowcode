@@ -135,7 +135,7 @@
               }
               resolve(true);
             } else {
-              console.log('error submit!!');
+              console.error('error submit!!');
               reject();
               return false;
             }

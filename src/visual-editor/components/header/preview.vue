@@ -27,7 +27,10 @@
   const emits = defineEmits(['update:visible']);
 
   const dialogVisible = useVModel(props, 'visible', emits);
-  const previewUrl = `${BASE_URL}preview/${location.hash}`;
+  const previewUrl =
+    import.meta.env.mode === 'development'
+      ? `${BASE_URL}preview/${location.hash}`
+      : `${BASE_URL}preview/index.html/${location.hash}`;
 </script>
 
 <style lang="scss">
